@@ -1,0 +1,9 @@
+<h1>To Do List</h1>
+<hr/>
+<h2>Are you sure you want to delete this category and all of its tasks?</h2>
+<h4>@Model.GetName()</h4>
+<form action="/category/delete/@Model.GetId()" method="post">
+  <input type="hidden" name="_method" value="DELETE">
+  <button type="submit">Delete</button>
+</form>
+<p><a href="/">Back home</a></p>

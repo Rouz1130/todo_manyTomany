@@ -49,6 +49,24 @@ namespace ToDoList
         model.Add("tasks", CategoryTasks);
         return View["category.cshtml", model];
       };
+      Get["category/edit/{id}"] = parameters => {
+        Category SelectedCategory = Category.Find(parameters.id);
+        return View["category_edit.cshtml", SelectedCategory];
+      };
+      Patch["category/edit/{id}"] = parameters => {
+        Category SelectedCategory = Category.Find(parameters.id);
+        SelectedCategory.Update(Request.Form["category-name"]);
+        return View["success.cshtml"];
+      };
+      Get["category/delete/{id}"] = parameters => {
+        Category SelectedCategory = Category.Find(parameters.id);
+        return View["category_delete.cshtml", SelectedCategory];
+      };
+      Delete["category/delete/{id}"] = parameters => {
+        Category SelectedCategory = Category.Find(parameters.id);
+        SelectedCategory.Delete();
+        return View["success.cshtml"];
+      };
     }
   }
 }

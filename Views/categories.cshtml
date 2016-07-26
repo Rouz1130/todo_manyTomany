@@ -1,12 +1,18 @@
-<h1>All categories</h1>
-@if (@Model.Count == 0)
-{
-  <p>There are no categories.</p>
-}
+<h1>To Do List</h1>
+<hr />
+<h2>Categories:</h2>
 <ul>
-  @foreach (var category in Model)
+  @if (Model.Count != 0)
   {
-    <li><a href="/categories/@category.GetId()">@category.GetName()</a></li>
+    @foreach (var category in Model)
+    {
+      <li><a href="/categories/@category.GetId()">@category.GetName()</a> | <a href="/category/edit/@category.GetId()">Edit</a>| <a href="/category/delete/@category.GetId()">Delete</a></li>
+    }
   }
 </ul>
-<a href="/categories/new">Add new category</a>
+<h4><a href="/categories/new">Add a new category</a></h4>
+<h4><a href="/">Return home</a></h4>
+
+<form action="/categories/clear" method="post">
+  <button type="submit">Clear all categories</button>
+</form>

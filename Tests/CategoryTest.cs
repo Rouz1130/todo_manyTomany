@@ -13,6 +13,12 @@ namespace ToDoList
       DBConfiguration.ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=todo_test;Integrated Security=SSPI;";
     }
 
+    public void Dispose()
+    {
+      Task.DeleteAll();
+      Category.DeleteAll();
+    }
+
     [Fact]
     public void Test_CategoriesEmptyAtFirst()
     {
@@ -98,10 +104,52 @@ namespace ToDoList
       Assert.Equal(testTaskList, resultTaskList);
     }
 
-    public void Dispose()
+    [Fact]
+    public void Test_Update_UpdatesCategoryInDatabase()
     {
-      Task.DeleteAll();
-      Category.DeleteAll();
+      //Arrange
+      string name = "Home stuff";
+      Category testCategory = new Category(name);
+      testCategory.Save();
+      string newName = "Work stuff";
+
+      //Act
+      testCategory.Update(newName);
+
+      string result = testCategory.GetName();
+
+      //Assert
+      Assert.Equal(newName, result);
+    }
+
+    [Fact]
+    public void Test_Delete_DeletesCategoryFromDatabase()
+    {
+      //Arrange
+      string name1 = "Home stuff";
+      Category testCategory1 = new Category(name1);
+      testCategory1.Save();
+
+      string name2 = "Work stuff";
+      Category testCategory2 = new Category(name2);
+      testCategory2.Save();
+
+      Task testTask1 = new Task("Mow the lawn", testCategory1.GetId());
+      testTask1.Save();
+      Task testTask2 = new Task("Send emails", testCategory2.GetId());
+      testTask2.Save();
+
+      //Act
+      testCategory1.Delete();  //?
+      List<Category> resultCategories = Category.GetAll();
+      List<Category> testCategoryList  = new List<Category> {testCategory2};
+
+      List<Task> resultTasks = Task.GetAll();
+      List<Task> testTaskList = new List<Task> {testTask2};
+
+      //Assert
+      Assert.Equal(testCategoryList, resultCategories);
+      Assert.Equal(testTaskList, resultTasks);
     }
   }
 }
