@@ -25,7 +25,7 @@ namespace ToDoList
         }
         else
         {
-          Category newCategory = (Category) otherCategory;
+          Category newCategory = (Category) otherCategory; //?
           bool idEquality = (this.GetId() == newCategory.GetId());
           bool nameEquality = (this.GetName() == newCategory.GetName());
           return (idEquality && nameEquality);
@@ -49,6 +49,7 @@ namespace ToDoList
       List<Category> allCategories = new List<Category>{};
 
       //DB.Connection() points to Database.cs which in turn uses the address from Startup.cs; opens a connection
+      //write our connections opening/closing as a separate method
       SqlConnection conn = DB.Connection();
       conn.Open();
 

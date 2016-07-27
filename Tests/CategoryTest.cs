@@ -30,6 +30,7 @@ namespace ToDoList
     }
 
     [Fact]
+    //testing our equals override method
     public void Test_Equal_ReturnsTrueForSameName()
     {
       //Arrange, Act
