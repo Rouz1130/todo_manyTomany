@@ -9,6 +9,7 @@ namespace ToDoList
     private int _id;
     private string _name;
 
+    //Id set to zero to avoid null exception being thrown
     public Category(string Name, int Id = 0)
     {
       _id = Id;
@@ -17,6 +18,7 @@ namespace ToDoList
 
     public override bool Equals(System.Object otherCategory)
     {
+        // format for checking data type: (variable) is (type)
         if (!(otherCategory is Category))
         {
           return false;
@@ -24,8 +26,8 @@ namespace ToDoList
         else
         {
           Category newCategory = (Category) otherCategory;
-          bool idEquality = this.GetId() == newCategory.GetId();
-          bool nameEquality = this.GetName() == newCategory.GetName();
+          bool idEquality = (this.GetId() == newCategory.GetId());
+          bool nameEquality = (this.GetName() == newCategory.GetName());
           return (idEquality && nameEquality);
         }
     }
@@ -46,20 +48,25 @@ namespace ToDoList
     {
       List<Category> allCategories = new List<Category>{};
 
+      //DB.Connection() points to Database.cs which in turn uses the address from Startup.cs; opens a connection
       SqlConnection conn = DB.Connection();
       conn.Open();
 
+      //saves our SQL query and executes
       SqlCommand cmd = new SqlCommand("SELECT * FROM categories;", conn);
       SqlDataReader rdr = cmd.ExecuteReader();
 
+      //Read() returns true if there are more rows to read, false if not
       while(rdr.Read())
       {
+        //GetInt32 and GetString from SQLDataReader class;
         int categoryId = rdr.GetInt32(0);
         string categoryName = rdr.GetString(1);
         Category newCategory = new Category(categoryName, categoryId);
         allCategories.Add(newCategory);
       }
 
+      //closes connection
       if (rdr != null)
       {
         rdr.Close();
@@ -77,9 +84,13 @@ namespace ToDoList
       SqlConnection conn = DB.Connection();
       conn.Open();
 
+      //OUTPUT INSERTED.id VALUES = output the Id of the record created
       SqlCommand cmd = new SqlCommand("INSERT INTO categories (name) OUTPUT INSERTED.id VALUES (@CategoryName);", conn);
 
+      //pass to SqlParameter - @ required
       SqlParameter nameParameter = new SqlParameter();
+      //manually assign the properties of the SqlParameter object
+      //@CategoryName is a dummy variable
       nameParameter.ParameterName = "@CategoryName";
       nameParameter.Value = this.GetName();
       cmd.Parameters.Add(nameParameter);
@@ -87,8 +98,11 @@ namespace ToDoList
 
       while(rdr.Read())
       {
+        //match our object in the memory with the object in the database; 0 is index position of the column
         this._id = rdr.GetInt32(0);
       }
+
+      //if reader exists, close it; if not, do nothing
       if (rdr != null)
       {
         rdr.Close();
@@ -104,6 +118,7 @@ namespace ToDoList
       SqlConnection conn = DB.Connection();
       conn.Open();
       SqlCommand cmd = new SqlCommand("DELETE FROM categories;", conn);
+      //used when executing command that does not return a value
       cmd.ExecuteNonQuery();
       conn.Close();
     }
@@ -112,7 +127,6 @@ namespace ToDoList
     {
       SqlConnection conn = DB.Connection();
       conn.Open();
-
       SqlCommand cmd = new SqlCommand("SELECT * FROM categories WHERE id = @CategoryId;", conn);
       SqlParameter categoryIdParameter = new SqlParameter();
       categoryIdParameter.ParameterName = "@CategoryId";

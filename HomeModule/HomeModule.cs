@@ -67,7 +67,6 @@ namespace ToDoList
         SelectedCategory.Delete();
         return View["success.cshtml"];
       };
-
       Post["/categories/clear"] = _ => {
         Category.DeleteAll();
         return View["cleared.cshtml"];

@@ -140,7 +140,7 @@ namespace ToDoList
       testTask2.Save();
 
       //Act
-      testCategory1.Delete();  //?
+      testCategory1.Delete();  //testing the delete method
       List<Category> resultCategories = Category.GetAll();
       List<Category> testCategoryList  = new List<Category> {testCategory2};
 
