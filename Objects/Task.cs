@@ -260,6 +260,35 @@ namespace ToDoList
       return categories;
     }
 
+    public void Complete()
+    {
+      SqlConnection connection = DB.Connection();
+      connection.Open();
 
+      SqlCommand command;
+
+      //sloppy, dont copy
+      if (this.GetIsCompleted() == true)
+      {
+        SqlCommand command2 = new SqlCommand("UPDATE tasks SET is_completed = false WHERE id = @TaskId;", connection);
+        command = command2;
+      }
+      else
+      {
+        SqlCommand command2 = new SqlCommand("UPDATE tasks SET is_completed = true WHERE id = @TaskId;", connection);
+        command = command2;
+      }
+
+      SqlParameter idParameter = new SqlParameter();
+      idParameter.ParameterName = "@TaskId";
+      idParameter.Value = this.GetId();
+      command.Parameters.Add(idParameter);
+      command.ExecuteNonQuery();
+
+      if (connection != null)
+      {
+        connection.Close();
+      }
+    }
   }
 }

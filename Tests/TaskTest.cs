@@ -144,6 +144,8 @@ namespace ToDoList
       Assert.Equal(testCategoryTasks, resultCategoryTasks);
     }
 
+    //new test to test task is complete
+
     public void Dispose()
     {
       Task.DeleteAll();
